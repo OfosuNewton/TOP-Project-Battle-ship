@@ -11,4 +11,22 @@ export class gameBoard {
 
         this.coordinates.push(coordinates)
     }
+
+    receiveAttack(coordinate) {
+        const hit = this.coordinates.some((shipCoordinates,index) => {
+            return shipCoordinates.some((shipCoordinate) => {
+                // comparison here
+                if (shipCoordinate[0] === coordinate[0] && shipCoordinate[1] === coordinate[1]) {
+                    this.ships[index].hit();
+                    return true;
+                }
+                return false;
+        })        
+    })
+    if (!hit) {
+        this.missed_attacks.push(coordinate);
+    }
+    return hit;
+
+}
 }
