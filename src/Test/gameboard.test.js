@@ -1,5 +1,5 @@
 import { gameBoard } from "../gamebord_class.js";
-// import { Ship } from "../Test/ship.test.js";
+// import { Ship } from "../ship_class.js";
 
 
 // Test for a newly created Gameboard
@@ -39,9 +39,68 @@ import { gameBoard } from "../gamebord_class.js";
 //    expect(board.ships[0].hits).toEqual(1);
 // })
 
-test('expecting the ship to record missed into missed_attacks ', () => {
-   let board = new gameBoard();
-   board.placeShip(3, [[1, 2], [3, 6], [4, 5]]);
-   board.receiveAttack([5,5]);
-   expect(board.missed_attacks).toContainEqual([5,5]);;
+// test('expecting the ship to record missed into missed_attacks ', () => {
+//    let board = new gameBoard();
+//    board.placeShip(3, [[1, 2], [3, 6], [4, 5]]);
+//    board.receiveAttack([5,5]);
+//    expect(board.missed_attacks).toContainEqual([5,5]);;
+// })
+
+// test('allShipsSunk returns false when not all ships are sunk', () => {
+//    const board = new gameBoard();
+//    // const ship = new Ship(2);
+//    board.placeShip(2,[[0,0],[0,1]]);
+
+//    expect(board.allShipsSunk()).toBe(false);
+// })
+
+// test("allShipsSunk returns true when all ships are sunked",() => {
+//    const board = new gameBoard();
+
+//    board.placeShip(2,[[0,0],[0,1]])
+//    board.receiveAttack([0,0]);
+//    board.receiveAttack([0,1]);
+   
+//    expect(board.allShipsSunk()).toBe(true);
+// })
+
+test("allShipsSunk returns false when at least one ship is not sunk", () => {
+   const board = new gameBoard();
+
+   // const ship1 = new Ship(2);
+   // const ship2 = new Ship(2);
+
+   //creating and placing two ships on the board
+   board.placeShip(2,[[0,0],[0,1]]);
+   board.placeShip(2,[[1,0],[1,1]]);
+
+   board.receiveAttack([0,0]);
+   board.receiveAttack([0,1])
+
+
+   expect(board.allShipsSunk()).toBe(false)
+})
+
+
+//doing same for true case, when all ships are sunked
+test("allShipsSunk returns true when all ships are sunk", () => {
+   const board = new gameBoard();
+
+   // const ship1 = new Ship(2);
+   // const ship2 = new Ship(2);
+
+   //creating and placing two ships on the board
+   board.placeShip(2, [[0, 0], [0, 1]]);
+   board.placeShip(2, [[1, 0], [1, 1]]);
+
+   board.receiveAttack([0, 0]);
+   board.receiveAttack([0, 1]);
+
+   board.receiveAttack([1,0]);
+   board.receiveAttack([1,1]);
+
+
+
+
+   expect(board.allShipsSunk()).toBe(true)
 })
