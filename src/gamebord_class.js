@@ -29,4 +29,9 @@ export class gameBoard {
     return hit;
 
 }
+allShipsSunk() {
+    return this.ships.every((ship) => {
+        return ship.isSunk();
+    })
+ }
 }
