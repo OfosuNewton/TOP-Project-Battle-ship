@@ -1,8 +1,8 @@
 import { Player } from "../src/Player";
 export class Game {
     constructor() {
-        this.player1 = new Player();
-        this.player2 = new Player();
+        this.player1 = new Player("Human");
+        this.player2 = new Player("Computer"); //changed player 2 argument to receive  computer
         this.currentPlayer = this.player1;
         this.winner = null;
     }
@@ -33,5 +33,10 @@ export class Game {
         }
 
         this.switchTurn();
+
+        if (this.currentPlayer === this.player2) {
+            const coordinate = this.currentPlayer.getRandomCoordinate()
+            this.currentPlayer.attack(this.player1.gameboard, coordinate);
+        }
     }
 }

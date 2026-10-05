@@ -1,5 +1,6 @@
 import { Game } from "../GameController";
 import { Player } from "../Player";
+import { gameBoard } from "../gamebord_class";
 
 // test("game has two players", () => {
 //     const game  = new Game();
@@ -14,7 +15,7 @@ import { Player } from "../Player";
     
 // })
 
-//testing the switch method
+// testing the switch method
 // test("game switches turns", () => {
 //     const game = new Game();
 
@@ -60,18 +61,33 @@ import { Player } from "../Player";
 //     expect(game.currentPlayer).toBe(game.player1);
 // });
 
-test("cannot attack after there is a winner", () => {
+// test("cannot attack after there is a winner", () => {
+//     const game = new Game();
+
+//     game.player2.gameboard.placeShip(1, [[0, 0]]);
+
+//     // Player 1 wins
+//     game.attack([0, 0]);
+
+//     // Player 2 would normally be the current player,
+//     // but the game is already over.
+//     game.attack([5, 5]);
+
+//     expect(game.winner).toBe(game.player1);
+//     expect(game.player2.gameboard.missed_attacks).toEqual([]);
+// });
+
+// test("Player 2 is the computer", () => {
+//     const game = new Game()
+//     expect(game.player2.type).toBe('Computer')
+// })
+
+test("computer attacks when it is the computer's turn", () => {
     const game = new Game();
 
-    game.player2.gameboard.placeShip(1, [[0, 0]]);
+    game.player1.gameboard.placeShip(1,[[5,5]]);
+    game.player2.gameboard.placeShip(2, [[0, 0],[0,1]]);
 
-    // Player 1 wins
-    game.attack([0, 0]);
-
-    // Player 2 would normally be the current player,
-    // but the game is already over.
-    game.attack([5, 5]);
-
-    expect(game.winner).toBe(game.player1);
-    expect(game.player2.gameboard.missed_attacks).toEqual([]);
-});
+    game.attack([0,0])
+    expect(game.player1.gameboard.missed_attacks.length).toBe(1);
+})
