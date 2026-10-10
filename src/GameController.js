@@ -25,18 +25,34 @@ export class Game {
                 ? this.player2
                 : this.player1;
 
-        this.currentPlayer.attack(enemyPlayer.gameboard, coordinate);
+        const hit = this.currentPlayer.attack(enemyPlayer.gameboard, coordinate);
+
 
         if (enemyPlayer.gameboard.allShipsSunk()) {
             this.winner = this.currentPlayer;
-            return;
+            return {
+                hit,
+                computerCoordinate: null,
+                computerHit: null
+            }
         }
 
         this.switchTurn();
 
+        let computerCoordinate = null;
+        let computerHit = null;
         if (this.currentPlayer === this.player2) {
-            const coordinate = this.currentPlayer.getRandomCoordinate()
-            this.currentPlayer.attack(this.player1.gameboard, coordinate);
+            computerCoordinate = this.currentPlayer.getRandomCoordinate()
+            computerHit = this.currentPlayer.attack(this.player1.gameboard, computerCoordinate);        
+            this.switchTurn();
+
+
+        }
+        return  {
+            hit,
+            computerCoordinate,
+            computerHit
+            
         }
     }
 }
