@@ -7,6 +7,7 @@ game.player2.gameboard.placeShip(2, [[5,5],[5,6]])
 
 const playerBoard = document.querySelector('#player-board');
 const computerBoard = document.querySelector('#computer-board');
+const gameStatus = document.querySelector('#game_status');
 
 //Render board function
 function renderBoard(gameBoard,container,player_type) {
@@ -33,8 +34,26 @@ function renderBoard(gameBoard,container,player_type) {
 
         if (player_type === "Computer") {
             cell.addEventListener('click', () => {
+                if (game.winner || game.isComputerThinking) {
+                    return
+                }
                 const coordinate = [row, column];
-                const result = game.attack(coordinate)
+
+                gameStatus.textContent = "Computer is thinking..."
+                const result = game.attack(coordinate, (computerCoordinate, computerHit) => {
+                    const [row, column] = computerCoordinate;
+
+                    const computerCell = playerBoard.querySelector(
+                        `[data-row="${row}"][data-column="${column}"]`
+                    );
+
+                    if (computerHit) {
+                        computerCell.classList.add('hit');
+                    } else {
+                        computerCell.classList.add('miss');
+                    }
+                    gameStatus.textContent = "Fire Rocket"
+                });
 
                 if (!result) {
                     return;
@@ -46,15 +65,19 @@ function renderBoard(gameBoard,container,player_type) {
                     cell.classList.add('miss');
                 }
 
-                if (result.computerCoordinate) {
-                    const [row,column] = result.computerCoordinate;
-                    const computerCell =  playerBoard.querySelector(`[data-row="${row}"][data-column="${column}"]`)
-                    if (result.computerHit) {
-                        computerCell.classList.add('hit');
-                    } else {
-                        computerCell.classList.add('miss');
-                    }
+                if (game.winner) {
+                    gameStatus.textContent = game.winner === game.player1 ? "You win!" : "Computer wins"
                 }
+
+                // if (result.computerCoordinate) {
+                //     const [row,column] = result.computerCoordinate;
+                //     const computerCell =  playerBoard.querySelector(`[data-row="${row}"][data-column="${column}"]`)
+                //     if (result.computerHit) {
+                //         computerCell.classList.add('hit');
+                //     } else {
+                //         computerCell.classList.add('miss');
+                //     }
+                // }
             });
         }
 

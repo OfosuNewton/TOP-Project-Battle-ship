@@ -5,6 +5,7 @@ export class Game {
         this.player2 = new Player("Computer"); //changed player 2 argument to receive  computer
         this.currentPlayer = this.player1;
         this.winner = null;
+        this.isComputerThinking = false;
     }
 
     switchTurn() {
@@ -15,8 +16,11 @@ export class Game {
         }
     }
 
-    attack(coordinate) {
+    attack(coordinate, onComputerMove) {
         if (this.winner) {
+            return;
+        }
+        if (this.isComputerThinking) {
             return;
         }
         
@@ -26,6 +30,10 @@ export class Game {
                 : this.player1;
 
         const hit = this.currentPlayer.attack(enemyPlayer.gameboard, coordinate);
+        if (hit === undefined) {
+            return;
+        }
+        
 
 
         if (enemyPlayer.gameboard.allShipsSunk()) {
@@ -37,22 +45,39 @@ export class Game {
             }
         }
 
+
         this.switchTurn();
 
-        let computerCoordinate = null;
-        let computerHit = null;
         if (this.currentPlayer === this.player2) {
-            computerCoordinate = this.currentPlayer.getRandomCoordinate()
-            computerHit = this.currentPlayer.attack(this.player1.gameboard, computerCoordinate);        
-            this.switchTurn();
+            this.isComputerThinking = true;
+            setTimeout(() => {
+                const computerCoordinate =
+                    this.currentPlayer.getRandomCoordinate();
 
+                const computerHit = this.currentPlayer.attack(
+                    this.player1.gameboard,
+                    computerCoordinate
+                );
 
+                if (this.player1.gameboard.allShipsSunk()) {
+                    this.winner = this.player2;
+                }
+
+                this.switchTurn();
+
+                this.isComputerThinking = false;
+                onComputerMove(computerCoordinate, computerHit);
+            }, 1000);
         }
-        return  {
-            hit,
-            computerCoordinate,
-            computerHit
+
+        return { hit };
+
+        
+        // return  {
+        //     hit,
+        //     computerCoordinate,
+        //     computerHit
             
-        }
+        // }
     }
 }

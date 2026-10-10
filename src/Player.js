@@ -32,7 +32,7 @@ export class Player {
         } while (this.attackedCoordinates.some((attackedCoordinate) => {
             return attackedCoordinate[0] === coordinate[0] && attackedCoordinate[1] === coordinate[1];
         }))
-        this.attackedCoordinates.push(coordinate);
+        // this.attackedCoordinates.push(coordinate);
         return coordinate;
 }
 }
