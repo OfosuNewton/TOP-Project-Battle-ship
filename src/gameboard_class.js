@@ -1,4 +1,4 @@
-import { Ship } from "../src/ship_class.js"
+import { Ship } from "./ship_class.js"
 export class gameBoard {
     constructor (ships = [], missed_attacks = []) {
         this.ships = ships

@@ -6,6 +6,28 @@ export class Game {
         this.currentPlayer = this.player1;
         this.winner = null;
         this.isComputerThinking = false;
+        this.computerHits = [];
+        this.computerTargetQueue = [];
+    }
+
+    getAdjacentCoordinates([row,column]) {
+        return [
+            [row - 1, column],
+            [row + 1, column],
+            [row, column - 1],
+            [row, column +1]
+        ].filter(([row, column]) => {
+            const withinBoard = row >= 0 && row < 10 && column >= 0 && column < 10;
+            const alreadyAttacked = this.player2.attackedCoordinates.some(([attackedRow,attackedColumn]) => {
+                return attackedRow === row && attackedColumn === column;
+            });
+            const alreadyQueued = this.computerTargetQueue.some(
+                ([queuedRow,queuedColumn]) => {
+                    return queuedRow === row && queuedColumn === column;
+                }
+            );
+            return withinBoard && !alreadyAttacked && !alreadyQueued;
+        });
     }
 
     switchTurn() {
@@ -51,13 +73,33 @@ export class Game {
         if (this.currentPlayer === this.player2) {
             this.isComputerThinking = true;
             setTimeout(() => {
-                const computerCoordinate =
-                    this.currentPlayer.getRandomCoordinate();
+                let computerCoordinate;
 
+                while (this.computerTargetQueue.length > 0 && !computerCoordinate) {
+                    const target = this.computerTargetQueue.shift();
+
+                    const alreadyAttacked = this.player2.attackedCoordinates.some(([row,column]) => row === target[0] && column === target[1]) ;
+                    if (!alreadyAttacked) {
+                        computerCoordinate = target;
+                    }
+                }
+                if (!computerCoordinate) {
+                    computerCoordinate = this.currentPlayer.getRandomCoordinate()
+                }
                 const computerHit = this.currentPlayer.attack(
                     this.player1.gameboard,
                     computerCoordinate
                 );
+
+                if (computerHit) {
+                    this.computerHits.push(computerCoordinate);
+                }
+
+                if (computerHit) {
+                    const adjacentCoordinates = this.getAdjacentCoordinates(computerCoordinate);
+
+                    this.computerTargetQueue.push(...adjacentCoordinates);
+                }
 
                 if (this.player1.gameboard.allShipsSunk()) {
                     this.winner = this.player2;

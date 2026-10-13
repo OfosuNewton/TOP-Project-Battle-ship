@@ -10,15 +10,89 @@
     <div class="header-container">
         <div class="header">Ultimate BattleShip🚢</div>
         <div class="place_ship" id="game_status">screen</div>
+        <div class="your-fleet">
+            <div class="ship_list">
+                <!-- Carrier -->
+                <div class="ship-option"
+                draggable="true"
+                data-ship="carrier"
+                data-length="5">
+                <span class="ship-name">Carrier</span>
+                <div class="ship-preview">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Battleship -->
+             <div class="ship-option"
+             draggable="true"
+             data-ship="battleship"
+             data-length="4">
+            <span class="ship-name">Battleship</span>
+            <div class="ship-preview">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            </div>
+            <!-- cruiser -->
+            <div class="ship-option" draggable="true" data-ship="cruiser" data-length="3">
+                <span class="ship-name">Cruiser</span>
+                <div class="ship-preview">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- submarine -->
+             <div class="ship-option"
+             draggable="true"
+             data-ship="submarine"
+             data-length="3">
+                <span class="ship-name">Submarine</span>
+                <div class="ship-preview">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Destroyer -->
+            <div class="ship-option" draggable="true" data-ship="destroyer" data-length="2">
+                <span class="ship-name">Destroyer</span>
+                <div class="ship-preview">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            </div>
+        </div>
         <div class="start-options">
-            <button class="axis">Axis: Vertical</button>
-            <button class="startGame">Start Game</button>
+            <button class="axis" type="button">Axis: Vertical</button>
+            <button class="startGame" type="button" disabled>Start Game</button>
+            <p class="ships-remaining">
+                Ships remaining: <span id="ships-remaining">5</span>
+            </p>
         </div>
     </div>
     <div class="main-containter">
-    <div id="player-board"></div>
-        <div id="computer-board"></div>
+    <div class="board-section">
+        <div id="player-board"></div>
+        <h2>Player Teritory</h2>
     </div>
+    
+    <div class="board-section">
+        <div id="computer-board"></div>
+        <h2>Computer Teritory</h2>
+    </div>
+    
+    
    
 </body>
 </html>
