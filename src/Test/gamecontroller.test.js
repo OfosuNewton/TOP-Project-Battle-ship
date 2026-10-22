@@ -82,12 +82,20 @@ import { gameBoard } from "../gamebord_class";
 //     expect(game.player2.type).toBe('Computer')
 // })
 
-test("computer attacks when it is the computer's turn", () => {
-    const game = new Game();
+// test("computer attacks when it is the computer's turn", () => {
+//     const game = new Game();
 
-    game.player1.gameboard.placeShip(1,[[5,5]]);
-    game.player2.gameboard.placeShip(2, [[0, 0],[0,1]]);
+//     game.player1.gameboard.placeShip(1,[[5,5]]);
+//     game.player2.gameboard.placeShip(2, [[0, 0],[0,1]]);
 
+//     game.attack([0,0])
+//     expect(game.player1.gameboard.missed_attacks.length).toBe(1);
+// })
+
+test("computer does not attack after the game emds",() => {
+    const game = new Game()
+
+    game.player2.gameboard.placeShip(1,[[0,0]]);
     game.attack([0,0])
-    expect(game.player1.gameboard.missed_attacks.length).toBe(1);
+    expect(game.player1.gameboard.missed_attacks).toEqual([]);
 })

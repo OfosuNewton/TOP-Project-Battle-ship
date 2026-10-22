@@ -10,6 +10,7 @@ export class Game {
         this.computerTargetQueue = [];
     }
 
+    //implemented smart computer moves around target hit cell
     getAdjacentCoordinates([row,column]) {
         return [
             [row - 1, column],
@@ -51,7 +52,13 @@ export class Game {
                 ? this.player2
                 : this.player1;
 
-        const hit = this.currentPlayer.attack(enemyPlayer.gameboard, coordinate);
+        const attackResult = this.currentPlayer.attack(enemyPlayer.gameboard,coordinate);
+        if (attackResult === undefined) {
+            return;
+        }
+        const hit = attackResult.hit;
+        const shipSunk = attackResult.shipSunk;
+
         if (hit === undefined) {
             return;
         }
@@ -62,6 +69,7 @@ export class Game {
             this.winner = this.currentPlayer;
             return {
                 hit,
+                shipSunk,
                 computerCoordinate: null,
                 computerHit: null
             }
@@ -86,10 +94,9 @@ export class Game {
                 if (!computerCoordinate) {
                     computerCoordinate = this.currentPlayer.getRandomCoordinate()
                 }
-                const computerHit = this.currentPlayer.attack(
-                    this.player1.gameboard,
-                    computerCoordinate
-                );
+               const computerAttackResult = this.currentPlayer.attack(this.player1.gameboard,computerCoordinate);
+               const computerHit = computerAttackResult.hit;
+               const computerShipSunk = computerAttackResult.shipSunk;
 
                 if (computerHit) {
                     this.computerHits.push(computerCoordinate);
@@ -108,11 +115,11 @@ export class Game {
                 this.switchTurn();
 
                 this.isComputerThinking = false;
-                onComputerMove(computerCoordinate, computerHit);
-            }, 1000);
+                onComputerMove(computerCoordinate, computerHit,computerShipSunk);
+            }, 1500);
         }
 
-        return { hit };
+        return { hit,shipSunk };
 
         
         // return  {

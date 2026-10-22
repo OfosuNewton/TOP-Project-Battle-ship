@@ -1,20 +1,56 @@
 import { Game } from "./GameController.js";
+import  explosionSrc  from "../src/sounds/explosion1.wav";
+import missSrc from "./sounds/miss.wav";
+import sunkSrc from "./sounds/sunk.wav";
+import winSrc from "./sounds/win.wav";
+import mainSrc from "./sounds/main.mp3";
+import explosion2Src from "./sounds/explosion2.wav";
+import gameStartSrc from "./sounds/game_start.mp3";
+import gameOverSrc from "./sounds/game_over.mp3";
 
-const game = new Game();
-//addding predetermined ships
-// game.player1.gameboard.placeShip(2,[[0,0],[0,1]]);
+
+
+let game = new Game();
+const gameOverOverlay = document.querySelector('#game-over')
+const gameOverTitle = document.querySelector('#game-over-title');
+const gameOverMessage = document.querySelector('#game-over-message');
+const retry_again = document.querySelector('#play-again')
+
+function showGameOver() {
+    if (!game.winner) {
+        return;
+    }
+    gameOverOverlay.classList.remove('hidden');
+    if (game.winner === game.player1) {
+        gameOverTitle.textContent = "VICTORY! 🏆";
+        gameOverMessage.textContent = 'Congratulations! You sank the entire enemy fleet.';
+    } else {
+        gameOverTitle.textContent = 'DEFEAT! 💥';
+        gameOverMessage.textContent = 'Your fleet has been destroyed. Better luck next time!'
+    }
+    if (!retry_again) {
+        return
+    } else {
+        retry_again.addEventListener('click', () => {
+            window.location.reload();
+
+        })
+    }
+}
+
 const computerShips = [
-    {length: 5, axis: 'horizontal'},
-    { length: 4, axis: 'vertical' },
-    { length: 3, axis: 'horizontal' },
-    { length: 3, axis: 'vertical'},
-    { length: 2, axis: 'horizontal' },
+    {name: 'Carrier', length: 5, axis: 'horizontal'},
+    {name: 'BattleShip', length: 4, axis: 'vertical' },
+    {name: 'Cuiser', length: 3, axis: 'horizontal' },
+    {name: 'Submarine', length: 3, axis: 'vertical'},
+    {name: 'Destroyer', length: 2, axis: 'horizontal' },
 ];
 
 computerShips.forEach((ship) => {
     const coordinates = getRandomShipCoordinates(ship.length,ship.axis);
 
-    game.player2.gameboard.placeShip(ship.length,coordinates);
+    game.player2.gameboard.placeShip(ship.length,coordinates,ship.name);
+    
 });
 
 // Random Ship placement for computer
@@ -126,6 +162,46 @@ function doesOverlap(newCoordinates,existingCoordinates) {
         });
     });
 }
+
+//handle audio
+const sounds = {
+    hit: new Audio(explosionSrc),
+    miss: new Audio(missSrc),
+    sunk: new Audio(sunkSrc),
+    win: new Audio(winSrc),
+    hit2: new Audio(explosion2Src),
+    main_song: new Audio(mainSrc),
+    game_start: new Audio(gameStartSrc),
+    game_over: new Audio(gameOverSrc)
+}
+sounds.main_song.loop = true;
+sounds.main_song.volume = 0.4
+function playSound(name, maxMs = 1000) {
+    const s = sounds[name];
+    s.currentTime = 0;
+    s.play();
+    setTimeout(() => s.pause(), maxMs);
+}
+
+sounds.main_song.play().catch(() => {
+    document.addEventListener('pointerdown', () => {
+        sounds.main_song.play().catch(console.error);
+    }, { once: true });
+});
+
+// handle SunkedShip
+function markSunkShip(shipSunk,boardContainer) {
+    if (!shipSunk) {
+        return;
+    }
+    shipSunk.coordinates.forEach(([row,column]) => {
+        const cell = boardContainer.querySelector(`[data-row="${row}"][data-column="${column}"]`);
+        if (cell) {
+            cell.classList.add('sunk');
+            playSound("sunk", 2150);
+        }
+    });
+}
 //Render board function
 function renderBoard(gameBoard,container,player_type) {
     for (let i = 0; i < 100; i++) {
@@ -169,11 +245,12 @@ function renderBoard(gameBoard,container,player_type) {
                 return;
             }
             if (doesOverlap(coordinates,game.player1.gameboard.coordinates)) {
-                gameStatus.textContent ="Ships cannot overlap!";
+                gameStatus.textContent ="Ships cannot overlap. Choose another position!";
                 return;
             }
 
-            game.player1.gameboard.placeShip(shipLength,coordinates)
+            game.player1.gameboard.placeShip(shipLength,coordinates,shipName)
+            
             coordinates.forEach(([row,column]) =>{
                 const shipCell =  playerBoard.querySelector(`[data-row="${row}"][data-column="${column}"]`)
                 console.log("Coordinates: ", row,column);
@@ -216,7 +293,7 @@ function renderBoard(gameBoard,container,player_type) {
                 const coordinate = [row, column];
 
                 gameStatus.textContent = "Computer is thinking..."
-                const result = game.attack(coordinate, (computerCoordinate, computerHit) => {
+                const result = game.attack(coordinate, (computerCoordinate, computerHit,computerShipSunk) => {
                     const [row, column] = computerCoordinate;
 
                     const computerCell = playerBoard.querySelector(
@@ -224,15 +301,33 @@ function renderBoard(gameBoard,container,player_type) {
                     );
 
                     if (computerHit) {
+                        playSound("hit2", 1150);
                         computerCell.classList.add('hit');
                     } else {
+                        playSound("miss");
                         computerCell.classList.add('miss');
-                    }
-                    if (game.winner) {
-                        gameStatus.textContent = game.winner === game.player1 ? "You win!" : "Computer wins!"
+                    };
+
+                    if (computerShipSunk) {
+                        markSunkShip(computerShipSunk,playerBoard);
+                        gameStatus.textContent = `Computer Destroyed ${computerShipSunk.ship.name}!`;
+
+                    } 
+                    else if (game.winner) {
+                        gameStatus.textContent = game.winner === game.player1 ? "You win, All enemies Eliminated!" : "Computer wins"
+                        showGameOver();
+                        playSound("game_over", 2150);
+                        sounds.main_song.pause();
+                        sounds.main_song.currentTime = 0;
+                        playSound("win", 4000)
+
                     } else {
-                        gameStatus.textContent = "Your turn! Fire at the enemies's crew!"
+                        gameStatus.textContent = `Your turn, fire at enemies fleet`;
                     }
+
+               
+                    
+                    
                 });
 
                 if (!result) {
@@ -241,23 +336,26 @@ function renderBoard(gameBoard,container,player_type) {
 
                 if (result.hit) {
                     cell.classList.add('hit');
+                    playSound("hit",1150);
                 } else {
                     cell.classList.add('miss');
+                    playSound("miss");
+                }
+
+                if (result.shipSunk) {
+                    markSunkShip(result.shipSunk,computerBoard);
+                    gameStatus.textContent = `Target ${result.shipSunk.ship.name} Eliminated`
+                    playSound("sunk", 1500);
                 }
 
                 if (game.winner) {
-                    gameStatus.textContent = game.winner === game.player1 ? "You win!" : "Computer wins"
+                    gameStatus.textContent = game.winner === game.player1 ? "You win, All enemies Eliminated!" : "Computer wins"
+                    playSound("game_over", 2150);
+                    showGameOver();
+                    sounds.main_song.pause();
+                    sounds.main_song.currentTime = 0;
+                    playSound("win", 4000)
                 }
-
-                // if (result.computerCoordinate) {
-                //     const [row,column] = result.computerCoordinate;
-                //     const computerCell =  playerBoard.querySelector(`[data-row="${row}"][data-column="${column}"]`)
-                //     if (result.computerHit) {
-                //         computerCell.classList.add('hit');
-                //     } else {
-                //         computerCell.classList.add('miss');
-                //     }
-                // }
             });
         }
 
@@ -273,6 +371,11 @@ startGameButton.addEventListener('click',()=> {
     if (placedShips.length !== 5) {
         return;
     }
+    document.querySelector('.ships-remaining').textContent = '';
     gameStarted = true;
+    if (startGameButton) {
+        playSound("game_start", 4000)
+    }
+    
     gameStatus.textContent = "Battle started Fire at the computer's board"
 });

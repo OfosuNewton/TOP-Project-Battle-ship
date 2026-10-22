@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate BattleShip</title>
     <script type="module" src="index.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="main-element">
     <div class="header-container">
         <div class="header">Ultimate BattleShip🚢</div>
-        <div class="place_ship" id="game_status">screen</div>
+        <div class="place_ship" id="game_status">Align your ships in position!</div>
         <div class="your-fleet">
             <div class="ship_list">
                 <!-- Carrier -->
@@ -84,15 +88,22 @@
     <div class="main-containter">
     <div class="board-section">
         <div id="player-board"></div>
-        <h2>Player Teritory</h2>
+        <h2 class="players">Player Teritory</h2>
     </div>
     
     <div class="board-section">
         <div id="computer-board"></div>
-        <h2>Computer Teritory</h2>
+        <h2 class="players">Computer Teritory</h2>
     </div>
     
-    
+    <div class="game-over-overlay hidden" id="game-over">
+        <div class="game-over-content">
+            <h1 id="game-over-title">Game Over!</h1>
+            <p id="game-over-message"></p>
+            <button id="play-again">Play Again</button>
+        </div>
+    </div>
+    </div>
    
 </body>
 </html>

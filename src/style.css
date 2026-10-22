@@ -1,33 +1,78 @@
+body {
+    margin: 0;
+    padding: 0;
+
+    background-image: url('img/war.jpeg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    /* Prevent text selection */
+    user-select: none;
+    -webkit-user-select: none;
+
+    /* Responsive page */
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    /* Remove flex centering from the body */
+    display: block;
+}
+.main-element {
+    width: min(96%, 1400px);
+    min-height: 100vh;
+    margin-inline: auto;
+    padding: 24px 12px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+html {
+    min-height: 100%;
+}
+ html,
+ body {
+     margin: 0;
+     min-height: 100%;
+     width: 100%;
+ }
+  * {
+    box-sizing: border-box;
+      /*removes the built in click overlay  */
+    -webkit-tap-highlight-color: transparent;
+  }
+
 .main-containter {
     display: flex;
     gap: 3rem;
     align-items: flex-start;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
     justify-content: center;
     /* height: 100vh; */
     margin: 1rem auto;
     cursor: pointer;
     margin: 0 auto;
-    
-    
-    
-    
+    gap: clamp(12px, 3vw, 32px);
+    width: 100%;
 }
-.header {
-    font-family:Georgia, 'Times New Roman', Times, serif;
-    font-weight: bold;
-    font-size: 2rem;
-}
-/* #player-board {
-    border: 1.5px black solid;
-    display: grid;
-    grid-template-columns: repeat(10, 2.5rem);
-    grid-template-rows: repeat(10, 2.5rem);
-    border-radius: 0.6rem;
-    gap: 0.4rem;
-    /* min-width: 16rem; */
-    
 
+
+.header {
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 2.6rem;
+    font-weight: 900;
+    font-style: normal;
+    letter-spacing: 0.5rem;
+}
 
 #computer-board,
 #player-board
@@ -36,27 +81,61 @@
     border: 1.5px solid white;
     grid-template-columns: repeat(10, 2.5rem);
     grid-template-rows: repeat(10, 2.5rem);
-    border-radius: 0.6rem;
+    border-radius: 1rem;
     gap: 0.2rem;
+    aspect-ratio: 1;
+    border: none;
     /* min-width: 16rem; */
+    width: min(100%, 400px);
+    aspect-ratio: 1 / 1;
 }
 .board-section {
     text-align: center;
+    margin: 0;
 }
+
 
 .cell {
     border: 3px solid rgba(0, 0, 0, 0.849);
+    background: rgba(0, 0, 0, 0.575);
+    transition: background 0.15s, transform 0.1s;
+    border: 2px solid rgba(255, 255, 255, 0.575);
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.452) 0px 5px 15px;
+    
 }
+.cell:hover {
+    background: #4fb3e898;
+    transform: scale(1);
+}
+
 .ship {
-    background-color: grey;
+    background-color: rgb(128, 128, 128);
 }
 
 .cell.hit {
     background-color: red;
+    animation: hitAnimation 0.7s ease-in-out;
+    position: relative;
+    z-index: 1;
+    
+}
+
+.cell.hit, .cell.miss {
+    pointer-events: none;
 }
 
 .cell.miss {
-    background-color: rgb(42, 71, 165);
+    background-color: rgba(255, 255, 255, 0.856);
+    position: relative;
+    z-index: 1;
+    animation: missAnimation 0.6s ease-in-out;
+}
+
+.sunk {
+    background-color: #333;
+    border: 4px solid #ff9800;
+    opacity: 0.4;
 }
 
 /* styling the html */
@@ -64,7 +143,10 @@
     display: flex;
     flex-direction: column;
     justify-self: center;
+    align-items: center;
     row-gap: 0.5rem;
+    color: white;
+    
 }
 button {
     
@@ -75,9 +157,49 @@ button {
 .place_ship {
     border: 12px rgba(0, 0, 0, 0.575) solid;
     padding: 0.4rem;
-    color:rgba(0, 0, 0, 0.699);
     font-family:Georgia, 'Times New Roman', Times, serif;
     border-radius: 0.5rem;
+    color: white;
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: bold;
+    width: 100%;
+    max-width: 400px;
+    min-width: 0;
+    min-height: 50px;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    text-align: center;
+    background: #11151c;
+    border: 8px solid #292d33e3;
+    padding: 15px;
+    border-radius: 18px;
+    flex-shrink: 0;
+    box-shadow:
+    0 0 0 2px #08090b,
+    0 12px 30px rgba(0, 0, 0, 0.65),
+    inset 0 0 15px rgba(255, 255, 255, 0.04);
+    color: #e5e7eb;
+        overflow-wrap: anywhere;
+        position: relative;
+        text-align: center;
+        width: min(95%, 1200px);
+        
+}
+
+
+.place_ship::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.07),
+            transparent 35%,
+            transparent 70%,
+            rgba(255, 255, 255, 0.02));
+    pointer-events: none;
 }
 .start-options {
     display: flex;
@@ -96,15 +218,35 @@ button {
 }
 .start-options .startGame {
     background-color: #4a5568;
+    transition: background 0.8s;
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 600;
 }
 .start-options .startGame:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
+.startGame:hover{
+    background: rgba(255, 0, 0, 0.637);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.players {
+    color: white;
+}
+
+.axis {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.568);
+    font-family: "Orbitron", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-weight: 500;
+}
 
 .axis:hover {
-    opacity: 0.7;
-    background-color: rgba(0, 0, 0, 0.144);
+    opacity: 0.9;
     cursor: pointer;
 }
 
@@ -127,8 +269,9 @@ button {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 3px 10px;
-    background-color: #4a5568;
+    padding: 0.5px 4px;
+    background: #11151c;
+    border: 8px solid #292d33e3;
     color: white;
     border-radius: 6px;
     cursor: grab;
@@ -138,7 +281,9 @@ button {
     cursor: grabbing;
 }
 .ship-name {
-    font-size: 16px;
+    font-family: "Orbitron", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
 }
 
 .ship-preview {
@@ -152,6 +297,101 @@ button {
     border: 1px solid #cbd5e0;
 }
 
+/* gameover section */
+.game-over-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0,0,0.8);
+}
+.hidden {
+    display: none;
+}
+.game-over-content {
+    text-align: center;
+    border: 2px solid rgb(255, 247, 247);
+    background-color: #0b4d6b;
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: min(90%, 400px);
+    box-shadow: 0 0 25px rgba(83, 74, 74, 0.705);
+}
+.game-over-content h1 {
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.4rem;
+}
+.game-over-content p {
+    font-size: 1rem;
+    font-weight: 600;
+}
 
+.game-over-content button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background-color 0.5s;
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 900;
+}
+.game-over-content button:hover {
+    background-color: rgba(0, 0, 0, 0.39);
+    color: white;
+    font-size: 0.9rem;
+    box-shadow:rgba(37, 17, 17, 0.842);
+    opacity: 0.7;
+}
+@keyframes hitAnimation {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 60, 60, 0);
+    }
+    30% {
+        transform: scale(1.3);
+        box-shadow: 0 0 15px rgba(255, 60, 60, 1);
+    }
+    60% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 60, 60, 0);
+    }
+}
+
+@keyframes missAnimation {
+    0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 rgba(59, 130, 246,  0);
+        }
+    
+        30% {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 1);
+        }
+    
+        60% {
+            transform: scale(0.9);
+        }
+    
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+        }
+    }
+
+ 
+        
 
 
