@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Project - BattleShip
-=======
 # Ultimate Battleship
 
 A browser-based Battleship game built with JavaScript as the final project for **The Odin Project's Intermediate JavaScript course**. The project focuses on object-oriented programming, modular JavaScript, test-driven development, DOM manipulation, and Webpack.
@@ -294,4 +291,3 @@ This project demonstrates practical application of the following JavaScript conc
 **Project:** Ultimate Battleship  
 **Course:** The Odin Project — Intermediate JavaScript  
 **Status:** Final project in development
->>>>>>> b3d9062 (Finished-up TOP BattleShip project by adding sounds and more css styles and animations)
