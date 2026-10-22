@@ -5,7 +5,7 @@ A browser-based Battleship game built with JavaScript as the final project for *
 Players deploy their fleet, target the computer's ships, and compete to sink the opposing fleet before their own ships are destroyed.
 
 ## Table of Contents
-
+ 
 - [Overview](#overview)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
@@ -23,6 +23,12 @@ Players deploy their fleet, target the computer's ships, and compete to sink the
 Ultimate Battleship is an interactive implementation of the classic Battleship strategy game. It features a 10 × 10 grid for each player, draggable ship placement, a computer-controlled opponent, turn-based attacks, and visual feedback for hits, misses, and destroyed ships.
 
 The project separates the core game logic from the user interface to make the code easier to test, maintain, and extend. Webpack is used to bundle the JavaScript modules and project assets.
+
+
+<img width="1600" height="900" alt="Live_preview" src="https://github.com/user-attachments/assets/37c98831-c3e7-4c0d-bcb1-9a6e412a87b3" />
+Live Demo
+[Play the game here] https://ofosunewton.github.io/TOP-Project-Battle-ship/
+
 
 ## Features
 
